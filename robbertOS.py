@@ -71,6 +71,9 @@ min_conf_threshold = 0.50
 resW, resH = 640, 480 # Resolution to run camera at
 imW, imH = resW, resH
 
+###setup grabber
+Holding_item=False
+
 ### Set up model parameters
 
 # Import TensorFlow libraries
@@ -175,6 +178,13 @@ while True:
     classes = interpreter.get_tensor(output_details[classes_idx]['index'])[0] # Class index of detected objects
     scores = interpreter.get_tensor(output_details[scores_idx]['index'])[0] # Confidence of detected objects
 
+    #defining loc dict 
+    loc_closest= {
+        'width': 0,
+        'xcenter' :0,
+        'ycenter' :0,
+        'material': '',
+    }
     # Loop over all detections and process each detection if its confidence is above minimum threshold
     for i in range(len(scores)):
         if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
@@ -211,8 +221,16 @@ while True:
                 # Now that we've gone through every detection, we know the total value of all coins in the frame. Let's display it in the corner of the frame.
             #cv2.putText(frame,'Object gevonden: ' + object_material,(20,40+40*number_of_objects),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),4,cv2.LINE_AA)
             cv2.putText(frame,object_material + ' gevonden op ' + '%.2f' % object_distance + ' cm afstand',(20,40 + 20*number_of_objects),cv2.FONT_HERSHEY_PLAIN,1,(230,230,230),2,cv2.LINE_AA)
-
-
+            
+            #creation of coordinated, size and material dict
+            if (xmax-xmin)>loc_closest['width'] and Holding_item==False:
+                loc_closest= {
+                    'width': abs(xmax-xmin),
+                    'xcenter' :(xmax-xmin)/2,
+                    'ycenter' :(ymax-ymin)/2,
+                    'material': object_material,
+            }
+                
     # Now that we've gone through every detection, we know the total value of all coins in the frame. Let's display it in the corner of the frame.
     # cv2.putText(frame,'Total change:',(20,80),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),4,cv2.LINE_AA)
     # cv2.putText(frame,'Total change:',(20,80),cv2.FONT_HERSHEY_PLAIN,2,(230,230,230),2,cv2.LINE_AA)
@@ -231,6 +249,37 @@ while True:
     time1 = (t2-t1)/freq
     frame_rate_calc= 1/time1
 
+
+    
+    
+    # if size<size_new nothin else update size and loc
+    #movement code
+    loc_x= int((loc_closest['xcenter']))
+    loc_y= int((loc_closest['ycenter']))
+    #coordinate=[x,y]
+
+
+    x_reference=resW/2
+    kx=1 #to edit
+    x_deviation=loc_x-x_reference
+    #if x is to the left of x_refrence i.e x<x_refrence
+    # x_error<0 so the left motor rotates backwards and the right motor rotates forward
+    # this rotates the robot to the left
+    while 3>x_deviation>-3: #margine TBT.
+        s= kx*x_deviation
+        SetLeftSpeed(s)
+        SetRightSpeed(-s) 
+    
+
+
+    y_reference=resH/4 #to edit
+    ky=1 #to edit
+    y_deviation=loc_y-y_reference
+    while 0<y_deviation<3:
+        u= ky*y_deviation
+        SetLeftSpeed(u)
+        SetRightSpeed(u) 
+
     # Press 'q' to quit
     if cv2.waitKey(1) == ord('q'):
         break
@@ -238,3 +287,5 @@ while True:
 # Clean up
 cv2.destroyAllWindows()
 cap.release()
+
+
