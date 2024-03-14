@@ -1,17 +1,12 @@
-######## Webcam Object Detection Using Tensorflow-trained Classifier #########
+######## Count Change Using Object Detection #########
 #
-# Author: Evan Juras
-# Date: 10/27/19
-# Description: 
-# This program uses a TensorFlow Lite model to perform object detection on a live webcam
-# feed. It draws boxes and scores around the objects of interest in each frame from the
-# webcam. To improve FPS, the webcam object runs in a separate thread from the main program.
-# This script will work with either a Picamera or regular USB webcam.
-#
-# This code is based off the TensorFlow Lite image classification example at:
-# https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/examples/python/label_image.py
-#
-# I added my own method of drawing boxes and labels using OpenCV.
+# Author: Evan Juras, EJ Technology Consultants (www.ejtech.io)
+# Date: 10/29/22
+#  
+# Description:
+# This program uses a TFLite coin detection model to locate and identify coins in 
+# a live camera feed. It calculates the total value of the coins in the camera's view.
+# (Works on US currency, but can be modified to work with coins from other countries!)
 
 # Import packages
 import os
@@ -23,52 +18,31 @@ import time
 from threading import Thread
 import importlib.util
 
-# Define VideoStream class to handle streaming of video from webcam in separate processing thread
-# Source - Adrian Rosebrock, PyImageSearch: https://www.pyimagesearch.com/2015/12/28/increasing-raspberry-pi-fps-with-python-and-opencv/
-class VideoStream:
-    """Camera object that controls video streaming from the Picamera"""
-    def __init__(self,resolution=(640,480),framerate=30):
-        # Initialize the PiCamera and the camera image stream
-        self.stream = cv2.VideoCapture(0)
-        ret = self.stream.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
-        ret = self.stream.set(3,resolution[0])
-        ret = self.stream.set(4,resolution[1])
-            
-        # Read first frame from the stream
-        (self.grabbed, self.frame) = self.stream.read()
+import rospy as rp
+from geometry_msgs.msg import Pose, Vector3
+from mirte_msgs.msg import *
+from mirte_msgs.srv import *
+from sensor_msgs.msg import *
+from std_srvs.srv import *
 
-	# Variable to control when the camera is stopped
-        self.stopped = False
 
-    def start(self):
-	# Start the thread that reads frames from the video stream
-        Thread(target=self.update,args=()).start()
-        return self
+SetRightSpeed = rp.ServiceProxy('/mirte/set_right_speed', SetMotorSpeed)
+SetLeftSpeed = rp.ServiceProxy('/mirte/set_left_speed', SetMotorSpeed)
+GetDistanceLeft = rp.ServiceProxy('/mirte/get_distance_left',GetDistance)
+GetPinValue = rp.ServiceProxy('/mirte/get_pin_value', GetPinValue)
+SetLeftServo=rp.ServiceProxy('/mirte/set_left_servo_angle',SetServoAngle)
 
-    def update(self):
-        # Keep looping indefinitely until the thread is stopped
-        while True:
-            # If the camera is stopped, stop the thread
-            if self.stopped:
-                # Close camera resources
-                self.stream.release()
-                return
+### User-defined variables
 
-            # Otherwise, grab the next frame from the stream
-            (self.grabbed, self.frame) = self.stream.read()
-
-    def read(self):
-	# Return the most recent frame
-        return self.frame
-
-    def stop(self):
-	# Indicate that the camera and thread should be stopped
-        self.stopped = True
-
+# Model info
+# MODEL_NAME = 'aluminium_papier_model'
+# GRAPH_NAME = 'detect.tflite'
+# LABELMAP_NAME = 'labelmap.txt'
+# use_TPU = False
 # Define and parse input arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--modeldir', help='Folder the .tflite file is located in',
-                    required=True)
+#parser.add_argument('--modeldir', help='Folder the .tflite file is located in',
+#                    required=True)
 parser.add_argument('--graph', help='Name of the .tflite file, if different than detect.tflite',
                     default='detect.tflite')
 parser.add_argument('--labels', help='Name of the labelmap file, if different than labelmap.txt',
@@ -82,13 +56,22 @@ parser.add_argument('--edgetpu', help='Use Coral Edge TPU Accelerator to speed u
 
 args = parser.parse_args()
 
-MODEL_NAME = args.modeldir
+#MODEL_NAME = args.modeldir
+MODEL_NAME = 'aluminium_papier_model'
 GRAPH_NAME = args.graph
 LABELMAP_NAME = args.labels
 min_conf_threshold = float(args.threshold)
 resW, resH = args.resolution.split('x')
 imW, imH = int(resW), int(resH)
 use_TPU = args.edgetpu
+
+
+# Program settings
+min_conf_threshold = 0.50
+resW, resH = 640, 480 # Resolution to run camera at
+imW, imH = resW, resH
+
+### Set up model parameters
 
 # Import TensorFlow libraries
 # If tflite_runtime is installed, import interpreter from tflite_runtime, else import from regular tensorflow
@@ -107,7 +90,7 @@ else:
 if use_TPU:
     # If user has specified the name of the .tflite file, use that name, otherwise use default 'edgetpu.tflite'
     if (GRAPH_NAME == 'detect.tflite'):
-        GRAPH_NAME = 'edgetpu.tflite'       
+        GRAPH_NAME = 'edgetpu.tflite'     
 
 # Get path to current working directory
 CWD_PATH = os.getcwd()
@@ -122,18 +105,11 @@ PATH_TO_LABELS = os.path.join(CWD_PATH,MODEL_NAME,LABELMAP_NAME)
 with open(PATH_TO_LABELS, 'r') as f:
     labels = [line.strip() for line in f.readlines()]
 
-# Have to do a weird fix for label map if using the COCO "starter model" from
-# https://www.tensorflow.org/lite/models/object_detection/overview
-# First label is '???', which has to be removed.
-if labels[0] == '???':
-    del(labels[0])
-
-# Load the Tensorflow Lite model.
+### Load Tensorflow Lite model
 # If using Edge TPU, use special load_delegate argument
 if use_TPU:
     interpreter = Interpreter(model_path=PATH_TO_CKPT,
                               experimental_delegates=[load_delegate('libedgetpu.so.1.0')])
-    print(PATH_TO_CKPT)
 else:
     interpreter = Interpreter(model_path=PATH_TO_CKPT)
 
@@ -159,24 +135,28 @@ if ('StatefulPartitionedCall' in outname): # This is a TF2 model
 else: # This is a TF1 model
     boxes_idx, classes_idx, scores_idx = 0, 1, 2
 
+# Initialize camera
+cap = cv2.VideoCapture(0)
+ret = cap.set(3, resW)
+ret = cap.set(4, resH)
+
 # Initialize frame rate calculation
 frame_rate_calc = 1
 freq = cv2.getTickFrequency()
 
-# Initialize video stream
-videostream = VideoStream(resolution=(imW,imH),framerate=30).start()
-time.sleep(1)
-
-#for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
+### Continuously process frames from camera
 while True:
 
     # Start timer (for calculating frame rate)
     t1 = cv2.getTickCount()
 
-    # Grab frame from video stream
-    frame1 = videostream.read()
+    # Reset coin value count for this frame
+    number_of_objects = 0
 
-    # Acquire frame and resize to expected shape [1xHxWx3]
+    # Grab frame from camera
+    hasFrame, frame1 = cap.read()
+
+    # Acquire frame and resize to input shape expected by model [1xHxWx3]
     frame = frame1.copy()
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     frame_resized = cv2.resize(frame_rgb, (width, height))
@@ -186,7 +166,7 @@ while True:
     if floating_model:
         input_data = (np.float32(input_data) - input_mean) / input_std
 
-    # Perform the actual detection by running the model with the image as input
+    # Perform detection by running the model with the image as input
     interpreter.set_tensor(input_details[0]['index'],input_data)
     interpreter.invoke()
 
@@ -195,29 +175,53 @@ while True:
     classes = interpreter.get_tensor(output_details[classes_idx]['index'])[0] # Class index of detected objects
     scores = interpreter.get_tensor(output_details[scores_idx]['index'])[0] # Confidence of detected objects
 
-    # Loop over all detections and draw detection box if confidence is above minimum threshold
+    # Loop over all detections and process each detection if its confidence is above minimum threshold
     for i in range(len(scores)):
         if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
 
-            # Get bounding box coordinates and draw box
+            # Get bounding box coordinates
             # Interpreter can return coordinates that are outside of image dimensions, need to force them to be within image using max() and min()
             ymin = int(max(1,(boxes[i][0] * imH)))
             xmin = int(max(1,(boxes[i][1] * imW)))
             ymax = int(min(imH,(boxes[i][2] * imH)))
             xmax = int(min(imW,(boxes[i][3] * imW)))
-            
+
+            # Draw bounding box
             cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
 
-            # Draw label
+            # Get object's name and draw label
             object_name = labels[int(classes[i])] # Look up object name from "labels" array using class index
-            label = '%s: %d%%' % (object_name, int(scores[i]*100)) # Example: 'person: 72%'
+            label = '%s: %d%%' % (object_name, int(scores[i]*100)) # Example: 'quarter: 72%'
             labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
             label_ymin = max(ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
             cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv2.FILLED) # Draw white box to put label text in
             cv2.putText(frame, label, (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text
 
+            # Assign the value of this coin based on the class name of the detected object
+            # (There are more efficient ways to do this, but this shows an example of how to trigger an action when a certain class is detected)
+            if object_name == 'aluminium':
+                object_material = 'aluminium'
+            elif object_name == 'papier':
+                object_material = 'papier'
+
+            object_width = xmax - xmin
+            object_distance = 77.48 - 0.29 * object_width
+            number_of_objects = number_of_objects + 1
+
+                # Now that we've gone through every detection, we know the total value of all coins in the frame. Let's display it in the corner of the frame.
+            #cv2.putText(frame,'Object gevonden: ' + object_material,(20,40+40*number_of_objects),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),4,cv2.LINE_AA)
+            cv2.putText(frame,object_material + ' gevonden op ' + '%.2f' % object_distance + ' cm afstand',(20,40 + 20*number_of_objects),cv2.FONT_HERSHEY_PLAIN,1,(230,230,230),2,cv2.LINE_AA)
+
+
+    # Now that we've gone through every detection, we know the total value of all coins in the frame. Let's display it in the corner of the frame.
+    # cv2.putText(frame,'Total change:',(20,80),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),4,cv2.LINE_AA)
+    # cv2.putText(frame,'Total change:',(20,80),cv2.FONT_HERSHEY_PLAIN,2,(230,230,230),2,cv2.LINE_AA)
+    # cv2.putText(frame,'$%.2f' % total_coin_value,(260,85),cv2.FONT_HERSHEY_PLAIN,2.5,(0,0,0),4,cv2.LINE_AA)
+    # cv2.putText(frame,'$%.2f' % total_coin_value,(260,85),cv2.FONT_HERSHEY_PLAIN,2.5,(85,195,105),2,cv2.LINE_AA)
+
     # Draw framerate in corner of frame
-    cv2.putText(frame,'FPS: {0:.2f}'.format(frame_rate_calc),(30,50),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,0),2,cv2.LINE_AA)
+    cv2.putText(frame,'FPS: %.2f' % frame_rate_calc,(20,50),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),4,cv2.LINE_AA)
+    cv2.putText(frame,'FPS: %.2f' % frame_rate_calc,(20,50),cv2.FONT_HERSHEY_PLAIN,2,(230,230,230),2,cv2.LINE_AA)
 
     # All the results have been drawn on the frame, so it's time to display it.
     cv2.imshow('Object detector', frame)
@@ -233,4 +237,4 @@ while True:
 
 # Clean up
 cv2.destroyAllWindows()
-videostream.stop()
+cap.release()
