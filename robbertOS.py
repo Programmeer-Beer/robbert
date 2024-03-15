@@ -73,7 +73,8 @@ imW, imH = resW, resH
 
 ###setup grabber
 Holding_item=False
-
+x_reference=resW/2
+y_reference=resH/4
 ### Set up model parameters
 
 # Import TensorFlow libraries
@@ -196,13 +197,15 @@ while True:
             ymax = int(min(imH,(boxes[i][2] * imH)))
             xmax = int(min(imW,(boxes[i][3] * imW)))
             xcenter= (xmax+xmin)/2
-            ycenter= (ymax+ymin)/2
+            ycenter= resH-(ymax+ymin)/2
+            xpercentage=round((xcenter/resW)*100)
+            ypercentage=round((ycenter/resH)*100)
             # Draw bounding box
             cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
 
             # Get object's name and draw label
             object_name = labels[int(classes[i])] # Look up object name from "labels" array using class index
-            label = '%s: %d%%: %s: %s' % (object_name, int(scores[i]*100), xcenter, ycenter) # Example: 'quarter: 72%'
+            label = '%s: %d%%: %s: %s' % (object_name, int(scores[i]*100), xcenter-x_reference, ycenter-y_reference) # Example: 'quarter: 72%'
             labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
             label_ymin = max(ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
             cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv2.FILLED) # Draw white box to put label text in
@@ -227,8 +230,8 @@ while True:
             if (xmax-xmin)>loc_closest['width'] and Holding_item==False:
                 loc_closest= {
                     'width': abs(xmax-xmin),
-                    'xcenter' :(xcenter)/2,
-                    'ycenter' :(ycenter)/2,
+                    'xcenter' :(xcenter),
+                    'ycenter' :(ycenter),
                     'material': object_material,
             }
                 
@@ -239,8 +242,8 @@ while True:
     # cv2.putText(frame,'$%.2f' % total_coin_value,(260,85),cv2.FONT_HERSHEY_PLAIN,2.5,(85,195,105),2,cv2.LINE_AA)
 
     # Draw framerate in corner of frame
-    cv2.putText(frame,'FPS: %.2f' % loc_closest['xcenter'],(20,50),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),4,cv2.LINE_AA)
-    cv2.putText(frame,'FPS: %.2f' % loc_closest['xcenter'],(20,50),cv2.FONT_HERSHEY_PLAIN,2,(230,230,230),2,cv2.LINE_AA)
+    #cv2.putText(frame,'FPS: %.2f' % loc_closest['xcenter'],(20,50),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),4,cv2.LINE_AA)
+    #cv2.putText(frame,'FPS: %.2f' % loc_closest['xcenter'],(20,50),cv2.FONT_HERSHEY_PLAIN,2,(230,230,230),2,cv2.LINE_AA)
 
     # All the results have been drawn on the frame, so it's time to display it.
     cv2.imshow('Object detector', frame)
@@ -260,33 +263,43 @@ while True:
     #coordinate=[x,y]
 
 
-    x_reference=resW/2
+    
     kx=1 #to edit
     x_deviation=loc_x-x_reference
     #if x is to the left of x_refrence i.e x<x_refrence
     # x_error<0 so the left motor rotates backwards and the right motor rotates forward
     # this rotates the robot to the left
-    print(loc_x,loc_y)
-    while 3>x_deviation>-3: #margine TBT.
-        s= kx*x_deviation
+    #print(loc_x,loc_y)
+    if (-40>x_deviation and x_deviation>40): #margine TBT.
+        s= int(kx*x_deviation)
+        if (s<40):
+            s=40
+        elif (s>100):
+            s=100
         SetLeftSpeed(s)
         SetRightSpeed(-s) 
-        print(s)
+        print("turning", s, x_deviation)
     
 
 
-    y_reference=resH/4 #to edit
+    
     ky=1 #to edit
     y_deviation=loc_y-y_reference
     
-    while 0<y_deviation<3:
-        u= ky*y_deviation
+    if 0<y_deviation and y_deviation<3:
+        u= int(ky*y_deviation)
+        if (u<40):
+            u=40
+        elif (u>100):
+            u=100
         SetLeftSpeed(u)
         SetRightSpeed(u) 
-        print(u)
+        print("forwarding", u)
 
     # Press 'q' to quit
     if cv2.waitKey(1) == ord('q'):
+        SetLeftSpeed(0)
+        SetRightSpeed(0)
         break
 
 # Clean up
