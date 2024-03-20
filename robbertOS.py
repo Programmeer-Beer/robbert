@@ -18,6 +18,7 @@ import time
 from threading import Thread
 import importlib.util
 
+
 import rospy as rp
 from geometry_msgs.msg import Pose, Vector3
 from mirte_msgs.msg import *
@@ -76,6 +77,15 @@ Holding_item=False
 x_reference=resW/2
 y_reference=resH/4
 ### Set up model parameters
+
+### def voor sign vinden
+def sign(number):
+    if number>0:
+        return 1
+    elif number==0:
+        return 0
+    elif number<-1:
+        return -1
 
 # Import TensorFlow libraries
 # If tflite_runtime is installed, import interpreter from tflite_runtime, else import from regular tensorflow
@@ -205,7 +215,7 @@ while True:
 
             # Get object's name and draw label
             object_name = labels[int(classes[i])] # Look up object name from "labels" array using class index
-            label = '%s: %d%%: %s: %s' % (object_name, int(scores[i]*100), xcenter-x_reference, ycenter-y_reference) # Example: 'quarter: 72%'
+            label = '%s: %d%%: %s: %s' % (object_name, int(scores[i]*100), xpercentage, ypercentage) # Example: 'quarter: 72%'
             labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
             label_ymin = max(ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
             cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv2.FILLED) # Draw white box to put label text in
@@ -264,37 +274,49 @@ while True:
 
 
     
-    kx=1 #to edit
+    kx=0.4 #to edit
     x_deviation=loc_x-x_reference
+    print(x_deviation)
+    sr=0
     #if x is to the left of x_refrence i.e x<x_refrence
     # x_error<0 so the left motor rotates backwards and the right motor rotates forward
     # this rotates the robot to the left
     #print(loc_x,loc_y)
-    if (-40>x_deviation and x_deviation>40): #margine TBT.
+    if (-40>x_deviation>-400 or 400>x_deviation>40): #margine TBT.
         s= int(kx*x_deviation)
-        if (s<40):
-            s=40
-        elif (s>100):
-            s=100
-        SetLeftSpeed(s)
-        SetRightSpeed(-s) 
-        print("turning", s, x_deviation)
+        print(s)
+        x_perfect=False
+        if (abs(s)<40):
+            sr=40 * sign(s)
+        elif (abs(s)>100):
+            sr=100 * sign(s)
+        else:
+            sr=s
+        
+        #SetLeftSpeed(sr)
+        #SetRightSpeed(-sr) 
+        print("centering", sr, x_deviation)
+    elif (40>x_deviation>-40):
+        x_perfect= True
     
 
 
     
     ky=1 #to edit
     y_deviation=loc_y-y_reference
-    
-    if 0<y_deviation and y_deviation<3:
+    ur=0
+    if ((-10>x_deviation>-400 or 400>x_deviation>10) and x_perfect== True):
+        y_perfect= False
         u= int(ky*y_deviation)
-        if (u<40):
-            u=40
-        elif (u>100):
-            u=100
-        SetLeftSpeed(u)
-        SetRightSpeed(u) 
-        print("forwarding", u)
+        if (abs(u)<40):
+            ur=40 * sign(u)
+        elif (abs(u)>100):
+            ur=100 * sign(u)
+        else:
+            ur=u
+        #SetLeftSpeed(ur)
+        #SetRightSpeed(ur) 
+        print("forwarding", ur ,y_deviation)
 
     # Press 'q' to quit
     if cv2.waitKey(1) == ord('q'):
