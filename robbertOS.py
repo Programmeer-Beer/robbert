@@ -324,6 +324,28 @@ while True:
         SetRightSpeed(0)
         break
 
+def dump_trash(material):
+    print('Starting dumping sequence')
+    while(sonar_distance > 0.2):
+        move('forward', 10)
+
+stall_percentage = 40
+active_percentage = 100 - stall_speed
+
+def move(direction, speed)
+    if(direction == 'forward'):
+        direction = 1
+        left_speed, right_speed = (stall_percentage + speed * (active_percentage/100)) * direction
+    elif(direction == 'backward'):
+        direction = -1
+        left_speed, right_speed = (stall_percentage + speed * (active_percentage/100)) * direction
+    elif(direction == 'left'):
+        left_speed = -1 * (stall_percentage + speed * (active_percentage/100))
+        right_speed = (stall_percentage + speed * (active_percentage/100))
+    elif(direction == 'right'):
+        left_speed = (stall_percentage + speed * (active_percentage/100))
+        right_speed = -1 * (stall_percentage + speed * (active_percentage/100))
+
 # Clean up
 cv2.destroyAllWindows()
 cap.release()
