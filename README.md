@@ -1,17 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
-  <style>
-    @media (prefers-color-scheme: dark) {
-      .dark-mode { display: block; }
-      .light-mode { display: none; }
-    }
-    @media (prefers-color-scheme: light), (prefers-color-scheme: no-preference) {
-      .dark-mode { display: none; }
-      .light-mode { display: block; }
-    }
-  </style>
-  <image href="https://github.com/Programmeer-Beer/robbert/raw/logo-color.png" width="200" height="200" class="light-mode"/>
-  <image href="https://github.com/Programmeer-Beer/robbert/raw/logo-white.png" width="200" height="200" class="dark-mode"/>
-</svg>
+![Logo](logo-white.png)
 
 # Robbert
 
