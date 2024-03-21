@@ -1,4 +1,4 @@
-# Robbert
+.# Robbert
 
 Robbert is a program which is designed to detect 5 cm round balls of either aluminium or paper trash with imaged recognition, pick it up and drop it at a specific place.
 
@@ -58,8 +58,42 @@ With robbert you will be able to communicate with the Arduino. You can read the 
 ```python
 import robbert
 
-# returns 'words'
-robbert.move()
+robbert.move(advised_movement)
+# Move robbert
+# Parameters:
+#  advised_movement = {
+#    'direction': 'forward',  # (str) Directions to choose from are 'forward', 'backword', 'right' and 'left'.
+#    'speed': 20.0,  # (float) Speeds between 0 and 100 percent.
+#    'duration': 0.5. # (float) Duration it will move, choose anything greater than 0.
+
+robbert.collision_warning()
+# Check for collision
+# Use MIN_DISTANCE in config.py to change the moment the warning will come up.
+# Returns: 
+#   bool: True if collision ahead False if its save to go
+
+robbert.avoid_collision()
+# Robbert will try to avoid the collision by reverting and turning left.
+# Use AVOID_COLLISSION_SPEED, AVOID_COLLISSION_BACKWARD_DURATION, AVOID_COLLISSION_TURN_DURATION in config.py to configer.
+
+robbert.grab()
+# This will grab the object.
+
+robbert.drop()
+# This will drop the object.
+
+robbert.sonar_distance()
+# Reads sonar sensor.
+# Returns:
+#   float: The measured distance in m
+
+robbert.check_color()
+# Reads color sensors.
+# Returns:
+# color = {
+#   'left': 'black',  # (str) Eighter 'white' or 'black'
+#   'left': 'black',  # (str) Eighter 'white' or 'black'
+# }
 ```
 
 .HOE ROBBERT GEBRUIKEN?
