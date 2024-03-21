@@ -1,5 +1,5 @@
 # Environment
-ENV = "development" # development or production
+ENV = "production" # development or production
 ROBBERT_LOGO = """
   _____            _       _                     _   
  |  __ \          | |     | |                   | |  
