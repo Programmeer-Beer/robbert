@@ -50,7 +50,7 @@ python3 main.py
 
 ## Usage
 
-Robbert should work flowlessly, but if you'd like to tinker a bit. Here's an. overview of all the functions and what they do.
+Robbert should work flawlessly, but if you'd like to tinker a bit. Here's an. overview of all the functions and what they do.
 
 ### robbert
 
