@@ -1,13 +1,4 @@
-##########################################################
-##  _____            _       _                     _    ##
-## |  __ \          | |     | |                   | |   ##
-## | |__) |   ___   | |__   | |__     ___   _ __  | |_  ##
-## |  _  /   / _ \  | '_ \  | '_ \   / _ \ | '__| | __| ##
-## | | \ \  | (_) | | |_) | | |_) | |  __/ | |    | |_  ##
-## |_|  \_\  \___/  |_.__/  |_.__/   \___| |_|     \__| ##
-##########################################################
-##               Hoe robbertOS gebruiken                ##
-##########################################################
+# Hoe robbertOS gebruiken
 #  Vind het dichtstbij zijnde object
 #  object_closest['xpercentage'], object_closest['ypercentage'], object_closest['material'] = object_detection.closest()
 #    return[0] = object_closest['xpercentage']: 0 <= xpercentage <= 100 [% vanaf links]
