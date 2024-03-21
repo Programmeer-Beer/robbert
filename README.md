@@ -21,8 +21,7 @@ sudo apt-get update
 sudo apt-get dist-upgrade
 ```
 
-Step 2. Download this repository
-This repository comes with a Tensorflow Lite model which is trained to recognize 5 cm balls of paper and aluminium. [This](https://github.com/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi) will be a useful guide if you'd like to create your own TensorFlow Lite model.
+Step 2. Download this repository. This repository comes with a Tensorflow Lite model which is trained to recognize 5 cm balls of paper and aluminium. [This](https://github.com/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi) will be a useful guide if you'd like to create your own TensorFlow Lite model.
 
 ```bash
 git clone https://github.com/Programmeer-Beer/robbert.git
