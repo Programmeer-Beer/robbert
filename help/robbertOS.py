@@ -14,6 +14,7 @@ import argparse
 import cv2
 import numpy as np
 import sys
+import multiprocessing
 import time
 from threading import Thread
 import importlib.util
@@ -158,6 +159,10 @@ ret = cap.set(4, resH)
 frame_rate_calc = 1
 freq = cv2.getTickFrequency()
 
+# initialise the process
+p = multiprocessing.Process(target=move, args(0, 0,))
+p.start()
+
 ### Continuously process frames from camera
 while True:
 
@@ -277,52 +282,65 @@ while True:
     kx=0.4 #to edit
     x_deviation=loc_x-x_reference
     print(x_deviation)
+    
     sr=0
     #if x is to the left of x_refrence i.e x<x_refrence
     # x_error<0 so the left motor rotates backwards and the right motor rotates forward
     # this rotates the robot to the left
     #print(loc_x,loc_y)
-    if (-40>x_deviation>-400 or 400>x_deviation>40): #margine TBT.
-        s= int(kx*x_deviation)
-        print(s)
-        x_perfect=False
-        if (abs(s)<40):
-            sr=40 * sign(s)
-        elif (abs(s)>100):
-            sr=100 * sign(s)
-        else:
-            sr=s
+    direction = 'Error: direction not defined :('
+    speed = 10
+
+    if (-40>x_deviation>-400): #margine TBT.
+        direction = "left"
+    elif (400>x_deviation>40):
+        direction = "right"
+    elif (40>x_deviation>-40):
+        direction = "forward"
+        #x_perfect= True
+
+
+        # s= int(kx*x_deviation)
+        # print(s)
+        # x_perfect=False
+        # if (abs(s)<40):
+        #     sr=40 * sign(s)
+        # elif (abs(s)>100):
+        #     sr=100 * sign(s)
+        # else:
+        #     sr=s
         
         #SetLeftSpeed(sr)
         #SetRightSpeed(-sr) 
         print("centering", sr, x_deviation)
-    elif (40>x_deviation>-40):
-        x_perfect= True
     
-
+    if p.is_alive():
+        p.terminate()
+    p = multiprocessing.Process(target=move, args(direction, speed,))
+    p.start()
 
     
-    ky=1 #to edit
-    y_deviation=loc_y-y_reference
-    ur=0
-    if ((-10>x_deviation>-400 or 400>x_deviation>10) and x_perfect== True):
-        y_perfect= False
-        u= int(ky*y_deviation)
-        if (abs(u)<40):
-            ur=40 * sign(u)
-        elif (abs(u)>100):
-            ur=100 * sign(u)
-        else:
-            ur=u
-        #SetLeftSpeed(ur)
-        #SetRightSpeed(ur) 
-        print("forwarding", ur ,y_deviation)
+    # ky=1 #to edit
+    # y_deviation=loc_y-y_reference
+    # ur=0
+    # if ((-10>x_deviation>-400 or 400>x_deviation>10) and x_perfect== True):
+    #     y_perfect= False
+    #     u= int(ky*y_deviation)
+    #     if (abs(u)<40):
+    #         ur=40 * sign(u)
+    #     elif (abs(u)>100):
+    #         ur=100 * sign(u)
+    #     else:
+    #         ur=u
+    #     #SetLeftSpeed(ur)
+    #     #SetRightSpeed(ur) 
+    #     print("forwarding", ur ,y_deviation)
 
-    # Press 'q' to quit
-    if cv2.waitKey(1) == ord('q'):
-        SetLeftSpeed(0)
-        SetRightSpeed(0)
-        break
+    # # Press 'q' to quit
+    # if cv2.waitKey(1) == ord('q'):
+    #     SetLeftSpeed(0)
+    #     SetRightSpeed(0)
+    #     break
 
 def dump_trash(material):
     print('Starting dumping sequence')
@@ -345,11 +363,46 @@ def move(direction, speed)
     elif(direction == 'right'):
         left_speed = (stall_percentage + speed * (active_percentage/100))
         right_speed = -1 * (stall_percentage + speed * (active_percentage/100))
+    SetLeftSpeed(left_speed)
+    SetRightSpeed(right_speed)
 
-    time.sleep(10)
+    # maximum driving time
+    time.sleep(0.1)
 
-    left_speed = 0
-    right_speed = 0
+    SetLeftSpeed(0)
+    SetRightSpeed(0)
+
+
+
+p.join(0.1)
+    
+# Controleer of het proces nog steeds draait
+if p.is_alive():
+    # Stop het proces
+    p.terminate()
+    # Wacht tot het proces daadwerkelijk is gestopt
+    p.join()
+
+
+if __name__ == "__main__":
+    # Maak een Process object voor mijn_functie
+    p = multiprocessing.Process(target=move, args(direction, speed,))
+    
+    # Start het proces
+    p.start()
+    
+    # Wacht een bepaalde tijd op het proces (bijv. 5 seconden)
+    p.join(5)
+    
+    # Controleer of het proces nog steeds draait
+    if p.is_alive():
+        print("Functie duurt te lang, wordt afgebroken...")
+        # Stop het proces
+        p.terminate()
+        # Wacht tot het proces daadwerkelijk is gestopt
+        p.join()
+    else:
+        print("Functie voltooid binnen de tijdslimiet")
 
 
 # Clean up
