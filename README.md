@@ -2,7 +2,7 @@
 
 # Robbert
 
-Robbert is a program which is designed to detect 5 cm round balls of either aluminium or paper trash with imaged recognition, pick it up and drop it at a specific place.
+Robbert is a program which is designed to detect 5 cm round balls of either aluminium or paper trash with imaged recognition, pick it up and drop it at a specific point.
 
 ## Requirements
 
