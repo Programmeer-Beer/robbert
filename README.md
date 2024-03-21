@@ -9,8 +9,8 @@
       .light-mode { display: block; }
     }
   </style>
-  <image href="https://github.com/Programmeer-Beer/robbert/blob/logo-color.png" width="200" height="200" class="light-mode"/>
-  <image href="https://github.com/Programmeer-Beer/robbert/blob/logo-white.png" width="200" height="200" class="dark-mode"/>
+  <image href="https://github.com/Programmeer-Beer/robbert/raw/logo-color.png" width="200" height="200" class="light-mode"/>
+  <image href="https://github.com/Programmeer-Beer/robbert/raw/logo-white.png" width="200" height="200" class="dark-mode"/>
 </svg>
 
 # Robbert
