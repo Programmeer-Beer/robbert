@@ -1,4 +1,4 @@
-![Logo](logo-white.png)
+![Logo](logo-no-background.png)
 
 # Robbert
 
