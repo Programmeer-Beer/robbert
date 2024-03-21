@@ -71,7 +71,7 @@ robbert.collision_warning()
 # Check for collision
 # Use MIN_DISTANCE in config.py to change the moment the warning will come up.
 # Returns: 
-#   bool: True if collision ahead False if its save to go
+#   bool: True if collision ahead False if its save to go.
 
 robbert.avoid_collision()
 # Robbert will try to avoid the collision by reverting and turning left.
@@ -86,26 +86,26 @@ robbert.drop()
 robbert.sonar_distance()
 # Reads sonar sensor.
 # Returns:
-#   float: The measured distance in m
+#   float: The measured distance in [m].
 
 robbert.check_color()
 # Reads color sensors.
 # Returns:
 # color = {
-#   'left': 'black',  # (str) Eighter 'white' or 'black'
-#   'left': 'black',  # (str) Eighter 'white' or 'black'
+#   'left': 'black',  # (str) Eighter 'white' or 'black'.
+#   'left': 'black',  # (str) Eighter 'white' or 'black'.
 # }
 ```
 
 ### object_detection
 
-To use the object detection models you can use object_detection
+To use the object detection models you can use object_detection.
 
 ```python
 import object_detection
 
 object_detection.find_closest()
-# Find the closest object near the robot
+# Find the closest object near the robot.
 # Returns:
 #  object_closest = {
 #    'material': 'aluminium',  # (str) Materials to choose from are dependend on the model defined in config.py, but in standard configuration the options are 'aluminium' and 'papier'.
