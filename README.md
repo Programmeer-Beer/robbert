@@ -4,7 +4,7 @@
 
 Robbert is a program which is designed to detect 5 cm round balls of either aluminium or paper trash with imaged recognition, pick it up and drop it at a specific place.
 
-## Recuirements
+## Requirements
 
 The followingen hardware is advised to use with Robbert:
 - Raspberry Pi 4b, with [Mirte Software](https://docs.mirte.org/doc/install_mirte_software.html) installed.
