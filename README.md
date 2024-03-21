@@ -64,7 +64,7 @@ robbert.move(advised_movement)
 #  advised_movement = {
 #    'direction': 'forward',  # (str) Directions to choose from are 'forward', 'backword', 'right' and 'left'.
 #    'speed': 20.0,  # (float) Speeds between 0 and 100 percent.
-#    'duration': 0.5. # (float) Duration it will move, choose anything greater than 0.
+#    'duration': 0.5,  # (float) Duration it will move, choose anything greater than 0.
 
 robbert.collision_warning()
 # Check for collision
@@ -96,29 +96,63 @@ robbert.check_color()
 # }
 ```
 
-.HOE ROBBERT GEBRUIKEN?
-Vind het dichtstbij zijnde object
-object_closest['xpercentage'], object_closest['ypercentage'], object_closest['material'] = object_detection.closest()
-return[0] = object_closest['xpercentage']: 0 <= xpercentage <= 100 [% vanaf links]
-return[1] = object_closest['ypercentage']: 0 <= ypercentage <= 100 [% vanaf onder]
-return[2] = object_closest['material']: 'aluminium' || 'papier'
+### object_detection
 
-Robbert laten bewegen
-robbert.move(direction, speed, duration)
-directions: 'forward' || 'backward' || 'right' || 'left'
-speeds: 0 <= speed <= 100 [%]
-duration: 0 <= duration [s]
+To use the object detection models you can use object_detection
 
-Robbert laten oppakken
-robbert.grab()
+```python
+import object_detection
 
-Robbert laten checken op potentiële botsing
-robbert.collsion_warning()
-return = warnings: True || False
+object_detection.find_closest()
+# Find the closest object near the robot
+# Returns:
+#  object_closest = {
+#    'material': 'aluminium',  # (str) Materials to choose from are dependend on the model defined in config.py, but in standard configuration the options are 'aluminium' and 'papier'.
+#    'xpercentage': 20,  # (round) Screen position left 0% and right 100%.
+#    'ypercentage': 20,  # (round) Screen position bottom 0% and top 100%.
+```
 
-Ontwijken berekenen
+### calculate
+
+The calculate file will do all the calculations for you. So that you can keep a clear overview.
+
+```python
+import calculate
+
 calculate.search_movement(object_closest)
-return[0] = directions: 'forward' || 'backward' || 'right' || 'left'
-return[1] = speeds: 0 <= speed <= 100 [%]
-return[2] = duration: 0 <= duration [s]
-return[3] = grab: True || False
+# Creates an advised movement directory to find a object.
+# Parameters:
+#  object_closest = {
+#    'material': 'aluminium',  # (str) Materials to choose from are dependend on the model defined in config.py, but in standard configuration the options are 'aluminium' and 'papier'.
+#    'xpercentage': 20,  # (round) Screen position left 0% and right 100%.
+#    'ypercentage': 20,  # (round) Screen position bottom 0% and top 100%.
+#
+# Returns:
+#  advised_movement = {
+#    'direction': 'forward',  # (str) Directions to choose from are 'forward', 'backword', 'right' and 'left'.
+#    'speed': 20.0,  # (float) Speeds between 0 and 100 percent.
+#    'duration': 0.5,  # (float) Duration it will move, choose anything greater than 0.
+#    'grab': False,  # (bool) If search_movement thinks you can grab the trash it will let you know with this parameter.
+#
+#  DEVIATION, DISERED_OBJECT_LOCATION, STANDARD_SPEED, CAUTION_LEVEL_Y and CAUTION_LEVEL_X can be changed in config.py to tweek the performance.
+
+calculate.drop_movement(color, desired_color, distance)
+# Creates an advised movement directory to drop the object.
+# Parameters:
+#   color = {  # (dir) Retrieved from the color sensor. 
+#     'left': 'black',  # (str) Can either be 'black' or 'white'.
+#     'right': 'white',  # (str) Can either be 'black' or 'white'.
+#   },
+#   desired_color = 'black',  # (str) Can either be 'black' or 'white'.
+#   distance = 1.2,  # (float) Distance to Robbert in meters, retrieved from the sonar sensor.
+#
+# Returns:
+#  advised_movement = {
+#    'direction': 'forward',  # (str) Directions to choose from are 'forward', 'backword', 'right' and 'left'.
+#    'speed': 20.0,  # (float) Speeds between 0 and 100 percent.
+#    'duration': 0.5,  # (float) Duration it will move, choose anything greater than 0.
+#    'drop': False,  # (bool) If drop_movement thinks you can drop the trash it will let you know with this parameter.
+#
+#  DEVIATION, STANDARD_SPEED, DROP_DISTANCE, STANDARD_DURATION_SONAR_FORWARD and STANDARD_DURATION_SONAR_TURNING can be changed in config.py to tweek the performance.
+
+```
