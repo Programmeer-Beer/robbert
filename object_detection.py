@@ -1,4 +1,4 @@
-from config import ENV, MODEL_NAME, GRAPH_NAME, LABELMAP_NAME, imW, imH, resW, resH, use_TPU, min_conf_threshold
+from config import ENV, MODEL_NAME, resW, resH, min_conf_threshold
 
 if ENV == 'production':
 	import os
@@ -10,6 +10,21 @@ if ENV == 'production':
 	import time
 	from threading import Thread
 	import importlib.util
+
+
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--graph', help='Name of the .tflite file, if different than detect.tflite',
+	                    default='detect.tflite')
+	parser.add_argument('--labels', help='Name of the labelmap file, if different than labelmap.txt',
+	                    default='labelmap.txt')
+	parser.add_argument('--edgetpu', help='Use Coral Edge TPU Accelerator to speed up detection',
+	                    action='store_true')
+
+	args = parser.parse_args()
+	GRAPH_NAME = args.graph
+	LABELMAP_NAME = args.labels
+	imW, imH = int(resW), int(resH)
+	use_TPU = args.edgetpu
 
 	# Import TensorFlow libraries
 	# If tflite_runtime is installed, import interpreter from tflite_runtime, else import from regular tensorflow

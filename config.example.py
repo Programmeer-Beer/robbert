@@ -20,13 +20,8 @@ AVOID_COLLISSION_TURN_DURATION = 0.1  # [s]
 
 # Object detection
 MODEL_NAME = "aluminium_papier_model"
-GRAPH_NAME = "detect.tflite"
-LABELMAP_NAME = "labelmap.txt"
-imW = 640  # [px]
-imH = 480  # [px]
 resW = 640  # [px]
 resH = 480  # [px]
-use_TPU = "store_true"
 min_conf_threshold = 0.80  # [%]
 
 # Calculate
