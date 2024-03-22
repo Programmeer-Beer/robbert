@@ -6,6 +6,9 @@ Robbert is a program which is designed to detect 5 cm round balls of either alum
 
 ## Requirements
 
+To be able to use Robbert, we recommend you to use the following hardware and software.
+
+### Recommanded hardware
 The followingen hardware is advised to use with Robbert:
 - Raspberry Pi 4b, with [Mirte Software](https://docs.mirte.org/doc/install_mirte_software.html) installed
 - USB-webcam, connected to the Raspberry Pi USB 3.0 port
@@ -14,8 +17,8 @@ The followingen hardware is advised to use with Robbert:
   - Sonar sensor
   - Color sensor (2)
 
-
-The following software would be recommanded:
+### Recommanded software
+The following software is recommanded:
 - [MobaXterm](https://mobaxterm.mobatek.net) is recommanded to receive the video feed from the camera.
 
 ## Installation
