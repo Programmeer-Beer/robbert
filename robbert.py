@@ -106,8 +106,7 @@ def drop():
 
 def sonar_distance():
     if ENV == 'production':
-        # Read sonar
-        distance = 'You forgot to write the sonar_distance code :('
+        distance = GetDistanceLeft()
     else:
         distance = 0.15 # Read sonar
 
