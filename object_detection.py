@@ -123,6 +123,8 @@ if ENV == 'production':
 	        'material': '',
 	    }
 
+	    number_of_objects = 0
+
 	    # Loop over all detections and process each detection if its confidence is above minimum threshold
 	    for i in range(len(scores)):
 	        if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
