@@ -14,6 +14,9 @@ The followingen hardware is advised to use with Robbert:
   - Sonar sensor
   - Color sensor (2)
 
+The following software would be recommanded:
+- [MobaXterm](https://mobaxterm.mobatek.net) is recommanded to receive the video feed from the camera.
+
 ## Installation
 
 Step 1. Update the Raspberry Pi
