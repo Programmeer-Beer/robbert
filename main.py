@@ -52,7 +52,6 @@ def drive_to_drop(object_material):
     while True:
         if robbert.collision_warning() == True:
             # Als er een object of muur in de weg is rij naar achter, dan naar rechts en begin de loop opnieuw
-            print('AAAAAAAAAAHH!! IK GA BOTSEN!!! IK DRAAI OM HOOR!')
             robbert.avoid_collision()
         else:
             color = robbert.check_color()  # color['left'], color['right']
