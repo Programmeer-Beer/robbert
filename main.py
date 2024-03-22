@@ -1,4 +1,4 @@
-from config import ROBBERT_LOGO
+from config import ROBBERT_LOGO, TURN_LEFT
 import os
 import warnings
 import calculate
@@ -25,7 +25,7 @@ def search_object():
             if object_closest['material'] == '':
                 # Als er geen object is gevonden, roteer dan en begin de loop opnieuw
                 print('Geen afval gevonden, ik zoek door.')
-                robbert.move('left', 20, 0.1)
+                robbert.move(TURN_LEFT)
             else:
                 # Als er een object is gevonden, bereken hoe je ernaar toe moet
                 advised_movement = calculate.search_movement(object_closest)

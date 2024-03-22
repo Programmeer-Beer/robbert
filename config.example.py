@@ -18,6 +18,12 @@ AVOID_COLLISSION_SPEED = 20  # [%]
 AVOID_COLLISSION_BACKWARD_DURATION = 0.5  # [s]
 AVOID_COLLISSION_TURN_DURATION = 0.1  # [s]
 
+TURN_LEFT = {
+    'direction': 'left',
+    'speed': AVOID_COLLISSION_SPEED,
+    'duration': AVOID_COLLISSION_TURN_DURATION,
+}
+
 # Object detection
 MODEL_NAME = "aluminium_papier_model"
 resW = 640  # [px]

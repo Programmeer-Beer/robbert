@@ -1,4 +1,4 @@
-from config import ENV, STALL_PERCENTAGE, MIN_DISTANCE, AVOID_COLLISSION_SPEED, AVOID_COLLISSION_BACKWARD_DURATION, AVOID_COLLISSION_TURN_DURATION
+from config import ENV, STALL_PERCENTAGE, MIN_DISTANCE, AVOID_COLLISSION_SPEED, AVOID_COLLISSION_BACKWARD_DURATION, AVOID_COLLISSION_TURN_DURATION, TURN_LEFT
 import time
 
 if ENV == 'production':
@@ -42,8 +42,8 @@ def move(advised_movement):
 
     # Push to motor
     if ENV == 'production':
-        SetLeftSpeed(left_speed)
-        SetRightSpeed(right_speed)
+        SetLeftSpeed(int(left_speed))
+        SetRightSpeed(int(right_speed))
     else:
         print('Left speed: ' + str(left_speed) + ' real / ' + str(speed * left_direction) + ' desired')
         print('Right speed: ' + str(right_speed) + ' real / ' + str(speed * right_direction) + ' desired')
@@ -79,12 +79,7 @@ def avoid_collision():
         'duration': AVOID_COLLISSION_BACKWARD_DURATION,
     }
     move(advised_movement)
-    advised_movement = {
-        'direction': 'left',
-        'speed': AVOID_COLLISSION_SPEED,
-        'duration': AVOID_COLLISSION_TURN_DURATION,
-    }
-    move(advised_movement)
+    move(TURN_LEFT)
 
 def grab():
     # Dit had je staan bij setup grabber
@@ -106,7 +101,8 @@ def drop():
 
 def sonar_distance():
     if ENV == 'production':
-        distance = GetDistanceLeft()
+        distance_raw = GetDistanceLeft()
+        distance = int(distance_raw.data)
     else:
         distance = 0.15 # Read sonar
 

@@ -11,7 +11,6 @@ if ENV == 'production':
 	from threading import Thread
 	import importlib.util
 
-
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--graph', help='Name of the .tflite file, if different than detect.tflite',
 	                    default='detect.tflite')
@@ -93,9 +92,6 @@ if ENV == 'production':
 	ret = cap.set(3, imW)
 	ret = cap.set(4, imH)
 
-	# Initialize frame rate calculation
-	frame_rate_calc = 1
-	freq = cv2.getTickFrequency()
 
 	### Continuously process frames from camera
 	def find_closest():
