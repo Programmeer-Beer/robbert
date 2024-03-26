@@ -1,5 +1,6 @@
 # Environment
 ENV = "production" # development or production
+DEBUG = False
 ROBBERT_LOGO = """
   _____            _       _                     _   
  |  __ \          | |     | |                   | |  
@@ -26,6 +27,7 @@ TURN_LEFT = {
 
 # Object detection
 MODEL_NAME = "aluminium_papier_model"
+SHOW_FRAME = False
 resW = 640  # [px]
 resH = 480  # [px]
 min_conf_threshold = 0.80  # [%]
