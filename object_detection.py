@@ -123,7 +123,7 @@ if ENV == 'production':
 
 	    object_closest = {
 	        'xpercentage': 0,
-	        'ypercentage': 0,
+	        'ypercentage': 101,
 	        'material': '',
 	    }
 
@@ -166,7 +166,7 @@ if ENV == 'production':
 	            cv2.putText(frame,object_name + ' gevonden op ' + '%.2f' % object_distance + ' cm afstand',(20,40 + 20*number_of_objects),cv2.FONT_HERSHEY_PLAIN,1,(230,230,230),2,cv2.LINE_AA)
 
 
-	            if ypercentage < object_closest['ypercentage']:
+	            if ypercentage <= object_closest['ypercentage']:
 	                object_closest = {
 	                    'xpercentage': xpercentage,
 	                    'ypercentage': ypercentage,
