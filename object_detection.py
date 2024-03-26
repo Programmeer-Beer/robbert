@@ -95,12 +95,12 @@ if ENV == 'production':
 
 	### Continuously process frames from camera
 	def find_closest():
-		if DEBUG:
-			print('Foto wordt gemaakt')
+	    if DEBUG:
+	        print('Foto wordt gemaakt')
 	    # Grab frame from camera
 	    hasFrame, frame1 = cap.read()
-		if DEBUG:
-			print('Foto gemaakt')
+	    if DEBUG:
+	        print('Foto gemaakt')
 
 	    # Acquire frame and resize to input shape expected by model [1xHxWx3]
 	    frame = frame1.copy()
@@ -147,7 +147,7 @@ if ENV == 'production':
 	            cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
 
 	            if DEBUG:
-	            	print('Locatie:' + xcenter + '%, ' + ycenter + '%')
+	                print('Locatie:' + xcenter + '%, ' + ycenter + '%')
 
 	            # Get object's name and draw label
 	            object_name = labels[int(classes[i])] # Look up object name from "labels" array using class index
@@ -173,14 +173,14 @@ if ENV == 'production':
 	                    'material': object_name,
 	                }
 
-		if DEBUG:
-			print('Totaal aantal gevonden objecten: ' + number_of_objects)
-			print('Dichtst bijzijnde object: ' + object_closest)
+	    if DEBUG:
+	        print('Totaal aantal gevonden objecten: ' + number_of_objects)
+	        print('Dichtst bijzijnde object: ' + object_closest)
 	    # All the results have been drawn on the frame, so it's time to display it.
 	    if SHOW_FRAME:
-		    cv2.imshow('Object detector', frame)
-			if DEBUG:
-				print('Geprobeerd een frame te produceren')
+	        cv2.imshow('Object detector', frame)
+	        if DEBUG:
+	            print('Geprobeerd een frame te produceren')
 
 	    return object_closest
 else:
