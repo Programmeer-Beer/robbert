@@ -62,6 +62,7 @@ def drive_to_drop(object_material):
                 break
             robbert.move(advised_movement)
 
+    # Drop the object
     print(object_material + ' gedropt op ' + desired_color + '.')
     robbert.drop()
 
