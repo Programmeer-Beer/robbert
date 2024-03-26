@@ -147,7 +147,7 @@ if ENV == 'production':
 	            cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
 
 	            if DEBUG:
-	                print('Locatie:' + xcenter + '%, ' + ycenter + '%')
+	                print('Locatie:' + str(xcenter) + '%, ' + str(ycenter) + '%')
 
 	            # Get object's name and draw label
 	            object_name = labels[int(classes[i])] # Look up object name from "labels" array using class index
@@ -174,8 +174,8 @@ if ENV == 'production':
 	                }
 
 	    if DEBUG:
-	        print('Totaal aantal gevonden objecten: ' + number_of_objects)
-	        print('Dichtst bijzijnde object: ' + object_closest)
+	        print('Totaal aantal gevonden objecten: ' + str(number_of_objects))
+	        print('Dichtst bijzijnde object: ' + str(object_closest))
 	    # All the results have been drawn on the frame, so it's time to display it.
 	    if SHOW_FRAME:
 	        cv2.imshow('Object detector', frame)
