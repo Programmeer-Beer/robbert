@@ -18,11 +18,18 @@ MIN_DISTANCE = 0.1  # [m]
 AVOID_COLLISSION_SPEED = 20  # [%]
 AVOID_COLLISSION_BACKWARD_DURATION = 0.5  # [s]
 AVOID_COLLISSION_TURN_DURATION = 0.1  # [s]
+DROPPED_TRASH_SPEED = 20  # [s]
+DROPPED_TRASH_DURATION = 1  # [s]
 
 TURN_LEFT = {
     'direction': 'left',
     'speed': AVOID_COLLISSION_SPEED,
     'duration': AVOID_COLLISSION_TURN_DURATION,
+}
+BACKWARD = {
+    'direction': 'backward',
+    'speed': DROPPED_TRASH_SPEED,
+    'duration': DROPPED_TRASH_DURATION,
 }
 
 # Object detection

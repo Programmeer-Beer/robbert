@@ -1,4 +1,4 @@
-from config import ROBBERT_LOGO, TURN_LEFT
+from config import ROBBERT_LOGO, TURN_LEFT, BACKWARD
 import os
 import warnings
 import calculate
@@ -17,26 +17,26 @@ def search_object():
     object_material = ''
     while True:
         if robbert.collision_warning() == True:
-            # Als er een object of muur in de weg is rij naar achter, dan naar rechts en begin de loop opnieuw
+            # If object detected: revert, turn left and the loop starts over
             robbert.avoid_collision()
         else:
-            # Zoek het dichtstbij zijnde object
+            # Search closest object
             object_closest = object_detection.find_closest()
             if object_closest['material'] == '':
-                # Als er geen object is gevonden, roteer dan en begin de loop opnieuw
+                # If no object is found, make a left turn and the loop starts over
                 print('Geen afval gevonden, ik zoek door.')
                 robbert.move(TURN_LEFT)
             else:
-                # Als er een object is gevonden, bereken hoe je ernaar toe moet
+                # If object is found, calculate the movement necessary to reach the object
                 advised_movement = calculate.search_movement(object_closest)
                 if advised_movement['grab']:
-                    # Als wordt geadviseerd het object te pakken, beëindig de while-loop
+                    # If advised by the calculator, grab the object. This ends the while loop
                     object_material = object_closest['material']
                     break
                 print(advised_movement)
                 robbert.move(advised_movement)
 
-    # Pak het object
+    # Grab the object
     print('Ja! Ik pak dit propje ' + object_material)
     robbert.grab()
 
@@ -51,14 +51,14 @@ def drive_to_drop(object_material):
     print('Nu ga ik dit stukje ' + object_material + ' wegbrengen naar ' + desired_color + '!')
     while True:
         if robbert.collision_warning() == True:
-            # Als er een object of muur in de weg is rij naar achter, dan naar rechts en begin de loop opnieuw
+            # If object detected: revert, turn left and the loop starts over
             robbert.avoid_collision()
         else:
             color = robbert.check_color()  # color['left'], color['right']
             distance = robbert.sonar_distance()  # [m]
             advised_movement = calculate.drop_movement(color, desired_color, distance)
             if advised_movement['drop']:
-                # Als wordt geadviseerd het object te droppen, beëindig de while-loop
+                # If advised by the calculator, drop the object. This ends the while loop
                 break
             robbert.move(advised_movement)
 
@@ -66,9 +66,11 @@ def drive_to_drop(object_material):
     robbert.drop()
 
 def clean_trash():
-    object_material = search_object()
-    drive_to_drop(object_material)
-    print('Robbert out')
+    while True:
+        object_material = search_object()
+        drive_to_drop(object_material)
+        robbert.move(BACKWARD)
+        sleep(10)
 
 def main():
     welcome_message()

@@ -13,21 +13,21 @@ def search_movement(object_closest):
 
 	print(object_closest)
 	if min_deviation <= object_closest['xpercentage'] <= max_deviation:
-		# Het object ligt op de centerline
+		# Object is on the centerline
 		print('Op de centerline')
 		if object_closest['ypercentage'] <= DISERED_OBJECT_LOCATION:
-			# Als het object op de juiste plaats ligt, geef door dat het gepakt moet worden
+			# Object is in the position to be grabbed
 			advised_movement['grab'] = True
 		else:
 			advised_movement['direction'] = 'forward'
 			deviation = object_closest['ypercentage']
 	else:
 		if object_closest['xpercentage'] < min_deviation:
-			# Object ligt links van het midden
+			# Object is to the left of the centerline
 			advised_movement['direction'] = 'left'
 			deviation = 50 - object_closest['xpercentage']
 		elif object_closest['xpercentage'] > max_deviation:
-			# Object ligt rechts van het midden
+			# Object is to the right of the centerline
 			advised_movement['direction'] = 'right'
 			deviation = object_closest['xpercentage'] - 50
 		advised_movement['duration'] = duration(deviation, advised_movement['direction'])
