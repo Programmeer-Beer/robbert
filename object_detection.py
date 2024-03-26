@@ -132,46 +132,50 @@ if ENV == 'production':
 	    # Loop over all detections and process each detection if its confidence is above minimum threshold
 	    for i in range(len(scores)):
 	        if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
-
-	            # Get bounding box coordinates
-	            # Interpreter can return coordinates that are outside of image dimensions, need to force them to be within image using max() and min()
+	        	# Find extremes for box
 	            ymin = int(max(1,(boxes[i][0] * imH)))
 	            xmin = int(max(1,(boxes[i][1] * imW)))
 	            ymax = int(min(imH,(boxes[i][2] * imH)))
 	            xmax = int(min(imW,(boxes[i][3] * imW)))
+
+	            # Find the center percentage
 	            xcenter = (xmax + xmin) / 2
 	            ycenter = resH - (ymax + ymin) / 2
 	            xpercentage= round((xcenter / resW) * 100)
 	            ypercentage= round((ycenter / resH) * 100)
-	            # Draw bounding box
-	            cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
 
-	            if DEBUG:
-	                print('Locatie:' + str(xcenter) + '%, ' + str(ycenter) + '%')
+	            # Find the material
+	            object_name = labels[int(classes[i])]
 
-	            # Get object's name and draw label
-	            object_name = labels[int(classes[i])] # Look up object name from "labels" array using class index
-	            label = '%s: %d%%: %s: %s' % (object_name, int(scores[i]*100), xpercentage, ypercentage) # Example: 'quarter: 72%'
-	            labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
-	            label_ymin = max(ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
-	            cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv2.FILLED) # Draw white box to put label text in
-	            cv2.putText(frame, label, (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text
-
-	            object_width = xmax - xmin
-	            object_distance = 77.48 - 0.29 * object_width
+	            # Update the number of objects
 	            number_of_objects = number_of_objects + 1
 
-	            # Now that we've gone through every detection, we know the total value of all coins in the frame. Let's display it in the corner of the frame.
-	            cv2.putText(frame,object_name + ' gevonden op ' + '%.2f' % object_distance + ' cm afstand',(20,40 + 20*number_of_objects),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),4,cv2.LINE_AA)
-	            cv2.putText(frame,object_name + ' gevonden op ' + '%.2f' % object_distance + ' cm afstand',(20,40 + 20*number_of_objects),cv2.FONT_HERSHEY_PLAIN,1,(230,230,230),2,cv2.LINE_AA)
-
-
+	            # Update the closest object if it is the closest
 	            if ypercentage <= object_closest['ypercentage']:
 	                object_closest = {
 	                    'xpercentage': xpercentage,
 	                    'ypercentage': ypercentage,
 	                    'material': object_name,
 	                }
+
+	            if DEBUG:
+	                print('Locatie:' + str(xcenter) + '%, ' + str(ycenter) + '%')
+
+	            if SHOW_FRAME:
+	                # Draw bounding box
+	                cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
+	            	
+	            	# Draw label
+	                label = '%s: %d%%: %s: %s' % (object_name, int(scores[i]*100), xpercentage, ypercentage) # Example: 'quarter: 72%'
+	                labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
+	                label_ymin = max(ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
+	                cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv2.FILLED) # Draw white box to put label text in
+	                cv2.putText(frame, label, (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text
+	                
+	                # Now that we've gone through every detection, we know the total value of all coins in the frame. Let's display it in the corner of the frame.
+	                cv2.putText(frame,object_name + ' gevonden op ' + '%.2f' % object_distance + ' cm afstand',(20,40 + 20*number_of_objects),cv2.FONT_HERSHEY_PLAIN,2,(0,0,0),4,cv2.LINE_AA)
+	                cv2.putText(frame,object_name + ' gevonden op ' + '%.2f' % object_distance + ' cm afstand',(20,40 + 20*number_of_objects),cv2.FONT_HERSHEY_PLAIN,1,(230,230,230),2,cv2.LINE_AA)
+
 
 	    if DEBUG:
 	        print('Totaal aantal gevonden objecten: ' + str(number_of_objects))
