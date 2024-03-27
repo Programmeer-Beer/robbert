@@ -35,8 +35,8 @@ BACKWARD = {
 # Object detection
 MODEL_NAME = "aluminium_papier_model"
 SHOW_FRAME = False
-resW = 640  # [px]
-resH = 480  # [px]
+resW = 480  # [px]
+resH = 640  # [px]
 min_conf_threshold = 0.80  # [%]
 
 # Calculate

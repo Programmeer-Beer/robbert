@@ -104,6 +104,7 @@ if ENV == 'production':
 
 	    # Acquire frame and resize to input shape expected by model [1xHxWx3]
 	    frame = frame1.copy()
+	    frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 	    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 	    frame_resized = cv2.resize(frame_rgb, (width, height))
 	    input_data = np.expand_dims(frame_resized, axis=0)
