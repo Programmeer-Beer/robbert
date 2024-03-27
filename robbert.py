@@ -1,4 +1,4 @@
-from config import ENV, STALL_PERCENTAGE, MIN_DISTANCE, AVOID_COLLISSION_SPEED, AVOID_COLLISSION_BACKWARD_DURATION, AVOID_COLLISSION_TURN_DURATION, TURN_LEFT, LEFT_MOTOR_DEVIATION, RIGHT_MOTOR_DEVIATION
+from config import ENV, STALL_PERCENTAGE, MIN_DISTANCE, AVOID_COLLISSION_SPEED, AVOID_COLLISSION_BACKWARD_DURATION, AVOID_COLLISSION_TURN_DURATION, TURN_LEFT, LEFT_MOTOR_DEVIATION, RIGHT_MOTOR_DEVIATION, NON_GRABBED_SERVO_ANGLE, GRABBED_SERVO_ANGLE
 import time
 
 if ENV == 'production':
@@ -83,20 +83,16 @@ def avoid_collision():
     move(TURN_LEFT)
 
 def grab():
-    # Dit had je staan bij setup grabber
-    # Holding_item=False
-    # x_reference=resW/2
-    # y_reference=resH/4
-
+    # Grab object
     if ENV == 'production':
-        print('You forgot to write the grabbing code :(')
+        SetLeftServo(GRABBED_SERVO_ANGLE)
     else:
         print('Opgepakt!')
 
 def drop():
-    #drop object
+    # Drop object
     if ENV == 'production':
-        print('You forgot to write the dropping code :(')
+        SetLeftServo(NON_GRABBED_SERVO_ANGLE)
     else:
         print('Gedropt!')
 
