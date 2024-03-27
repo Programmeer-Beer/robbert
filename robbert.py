@@ -63,6 +63,7 @@ def collision_warning():
 	# Checks if objects are too close and returns True or False
 
     distance = sonar_distance()  # [m]
+    print(distance)
 
     if distance < MIN_DISTANCE:
         collision_warning = True
