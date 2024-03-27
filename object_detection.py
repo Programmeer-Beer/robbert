@@ -98,6 +98,10 @@ if ENV == 'production':
 	    if DEBUG:
 	        print('Foto wordt gemaakt')
 	    # Grab frame from camera
+
+	    for _ in range(4):
+	    	cap.grab()
+
 	    hasFrame, frame1 = cap.read()
 	    if DEBUG:
 	        print('Foto gemaakt')
