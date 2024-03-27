@@ -31,6 +31,8 @@ BACKWARD = {
     'speed': DROPPED_TRASH_SPEED,
     'duration': DROPPED_TRASH_DURATION,
 }
+LEFT_MOTOR_DEVIATION = 1.1 # Multiplycation factor
+RIGHT_MOTOR_DEVIATION = 1 # Multiplycation factor
 
 # Object detection
 MODEL_NAME = "aluminium_papier_model"

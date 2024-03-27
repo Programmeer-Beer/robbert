@@ -1,4 +1,4 @@
-from config import ENV, STALL_PERCENTAGE, MIN_DISTANCE, AVOID_COLLISSION_SPEED, AVOID_COLLISSION_BACKWARD_DURATION, AVOID_COLLISSION_TURN_DURATION, TURN_LEFT
+from config import ENV, STALL_PERCENTAGE, MIN_DISTANCE, AVOID_COLLISSION_SPEED, AVOID_COLLISSION_BACKWARD_DURATION, AVOID_COLLISSION_TURN_DURATION, TURN_LEFT, LEFT_MOTOR_DEVIATION, RIGHT_MOTOR_DEVIATION
 import time
 
 if ENV == 'production':
@@ -37,8 +37,8 @@ def move(advised_movement):
     absolute_speed = STALL_PERCENTAGE + speed * active_percentage
 
     # Combine motor speed with direction  
-    left_speed =  absolute_speed * left_direction
-    right_speed = absolute_speed * right_direction
+    left_speed =  absolute_speed * left_directionc * LEFT_MOTOR_DEVIATION
+    right_speed = absolute_speed * right_direction * RIGHT_MOTOR_DEVIATION
 
     # Push to motor
     if ENV == 'production':
