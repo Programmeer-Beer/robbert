@@ -1,4 +1,4 @@
-from config import ENV, DEVIATION, DISERED_OBJECT_LOCATION, CAUTION_LEVEL_X, CAUTION_LEVEL_Y, STANDARD_SPEED, DROP_DISTANCE, STANDARD_DURATION_SONAR_FORWARD, STANDARD_DURATION_SONAR_TURNING
+from config import ENV, DEBUG, DEVIATION, DISERED_OBJECT_LOCATION, CAUTION_LEVEL_X, CAUTION_LEVEL_Y, STANDARD_SPEED, DROP_DISTANCE, STANDARD_DURATION_SONAR_FORWARD, STANDARD_DURATION_SONAR_TURNING
 
 min_deviation = 50 - DEVIATION
 max_deviation = 50 + DEVIATION
@@ -11,7 +11,9 @@ def search_movement(object_closest):
         'grab': False,
     }
 
-	print(object_closest)
+    if DEBUG:
+	 print(object_closest)
+	
 	if min_deviation <= object_closest['xpercentage'] <= max_deviation:
 		# Object is on the centerline
 		print('Op de centerline')
@@ -31,7 +33,10 @@ def search_movement(object_closest):
 			advised_movement['direction'] = 'right'
 			deviation = object_closest['xpercentage'] - 50
 		advised_movement['duration'] = duration(deviation, advised_movement['direction'])
-		print(duration(deviation, advised_movement['direction']))
+
+		if DEBUG:
+			print('duration :' + str(advised_movement['duration']))
+			print(duration(deviation, advised_movement['direction']))
 	
 	return advised_movement
 

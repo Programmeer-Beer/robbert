@@ -37,7 +37,7 @@ def move(advised_movement):
     absolute_speed = STALL_PERCENTAGE + speed * active_percentage
 
     # Combine motor speed with direction  
-    left_speed =  absolute_speed * left_direction * LEFT_MOTOR_DEVIATION
+    left_speed = absolute_speed * left_direction * LEFT_MOTOR_DEVIATION
     right_speed = absolute_speed * right_direction * RIGHT_MOTOR_DEVIATION
 
     # Push to motor
