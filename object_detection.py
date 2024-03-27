@@ -154,8 +154,8 @@ if ENV == 'production':
 	            # Update the closest object if it is the closest
 	            if ypercentage <= object_closest['ypercentage']:
 	                object_closest = {
-	                    'xpercentage': ypercentage,
-	                    'ypercentage': xpercentage,
+	                    'xpercentage': xpercentage,
+	                    'ypercentage': ypercentage,
 	                    'material': object_name,
 	                }
 
