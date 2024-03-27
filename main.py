@@ -1,4 +1,4 @@
-from config import ROBBERT_LOGO, TURN_LEFT, BACKWARD
+from config import DEBUG, ROBBERT_LOGO, TURN_LEFT, BACKWARD
 import os
 import keyboard
 import warnings
