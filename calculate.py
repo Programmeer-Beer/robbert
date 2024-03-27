@@ -22,7 +22,7 @@ def search_movement(object_closest):
 			advised_movement['grab'] = True
 		else:
 			advised_movement['direction'] = 'forward'
-			advised_movement['duration'] = duration(object_closest['ypercentage'], advised_movement['direction'])
+			deviation = object_closest['ypercentage']
 	else:
 		if object_closest['xpercentage'] < min_deviation:
 			# Object is to the left of the centerline
@@ -32,7 +32,8 @@ def search_movement(object_closest):
 			# Object is to the right of the centerline
 			advised_movement['direction'] = 'right'
 			deviation = object_closest['xpercentage'] - 50
-		advised_movement['duration'] = duration(deviation, advised_movement['direction'])
+	
+	advised_movement['duration'] = duration(deviation, advised_movement['direction'])
 
 	if DEBUG:
 		print('duration :' + str(advised_movement['duration']))
