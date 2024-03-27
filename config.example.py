@@ -14,7 +14,7 @@ ROBBERT_LOGO = """
 
 # Robbert
 STALL_PERCENTAGE = 40  # [%]
-MIN_DISTANCE = 0.1  # [m]
+MIN_DISTANCE = 25  # [cm]
 AVOID_COLLISSION_SPEED = 20  # [%]
 AVOID_COLLISSION_BACKWARD_DURATION = 0.5  # [s]
 AVOID_COLLISSION_TURN_DURATION = 0.1  # [s]
@@ -44,9 +44,9 @@ min_conf_threshold = 0.80  # [%]
 # Calculate
 DEVIATION = 10  # [%]
 DISERED_OBJECT_LOCATION = 10  # [%]
-CAUTION_LEVEL_X = 0.005  # CAUTION_LEVEL = duration[s] / deviation[%]
-CAUTION_LEVEL_Y = 0.005  # CAUTION_LEVEL = duration[s] / deviation[%]
-STANDARD_SPEED = 10  # [%]
+CAUTION_LEVEL_X = 0.0005  # CAUTION_LEVEL = duration[s] / deviation[%]
+CAUTION_LEVEL_Y = 0.0005  # CAUTION_LEVEL = duration[s] / deviation[%]
+STANDARD_SPEED = 90  # [%]
 STANDARD_DURATION_SONAR_FORWARD = 0.1 # [s]
 STANDARD_DURATION_SONAR_TURNING = 0.1 # [s]
 DROP_DISTANCE = 0.2  # [m]

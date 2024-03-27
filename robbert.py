@@ -62,7 +62,7 @@ def move(advised_movement):
 def collision_warning():
 	# Checks if objects are too close and returns True or False
 
-    distance = sonar_distance()  # [m]
+    distance = sonar_distance() # [cm]
     print(distance)
 
     if distance < MIN_DISTANCE:
