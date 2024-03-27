@@ -122,3 +122,8 @@ def check_color(): # color['left'], color['right']
         }
     
     return color
+
+def stop():
+    SetLeftSpeed(0)
+    SetRightSpeed(0)
+    break
