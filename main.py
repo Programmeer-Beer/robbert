@@ -1,6 +1,5 @@
-from config import DEBUG, ROBBERT_LOGO, TURN_LEFT, BACKWARD
+from config import ROBBERT_LOGO, TURN_LEFT, BACKWARD
 import os
-import keyboard
 import warnings
 import calculate
 import object_detection
@@ -17,8 +16,6 @@ def welcome_message():
 def search_object():
     object_material = ''
     while True:
-        if DEBUG and keyboard.is_pressed('q'):
-            robbert.stop()
         if robbert.collision_warning() == True:
             # If object detected: revert, turn left and the loop starts over
             robbert.avoid_collision()

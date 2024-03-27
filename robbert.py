@@ -123,6 +123,6 @@ def check_color(): # color['left'], color['right']
     
     return color
 
-def stop():
-    SetLeftSpeed(0)
-    SetRightSpeed(0)
+# Start with the motor speed on 0
+SetLeftSpeed(0)
+SetRightSpeed(0)
