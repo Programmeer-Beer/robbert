@@ -11,9 +11,9 @@ def search_movement(object_closest):
         'grab': False,
     }
 
-    if DEBUG:
-	 print(object_closest)
-	
+	if DEBUG:
+		print(object_closest)
+
 	if min_deviation <= object_closest['xpercentage'] <= max_deviation:
 		# Object is on the centerline
 		print('Op de centerline')
