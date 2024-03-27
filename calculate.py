@@ -75,8 +75,8 @@ def duration(deviation, direction):
 	# CAUTION_LEVEL = 0.25 / 50 = 0.005 
 
 	if direction == 'forward':
-		duration = deviation * CAUTION_LEVEL_Y
+		duration = deviation * CAUTION_LEVEL_Y + 0.1
 	else:
-		duration = deviation * CAUTION_LEVEL_X
+		duration = deviation * CAUTION_LEVEL_X + 0.1
 
 	return duration
