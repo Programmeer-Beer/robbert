@@ -134,10 +134,10 @@ if ENV == 'production':
 	    for i in range(len(scores)):
 	        if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
 	        	# Find extremes for box
-	            ymin = int(max(1,(boxes[i][1] * imH)))
-	            xmin = int(max(1,(boxes[i][0] * imW)))
-	            ymax = int(min(imH,(boxes[i][3] * imH)))
-	            xmax = int(min(imW,(boxes[i][2] * imW)))
+	            ymin = int(max(1,(boxes[i][0] * imH)))
+	            xmin = int(max(1,(boxes[i][1] * imW)))
+	            ymax = int(min(imH,(boxes[i][2] * imH)))
+	            xmax = int(min(imW,(boxes[i][3] * imW)))
 
 	            # Find the center percentage
 	            xcenter = (xmax + xmin) / 2
@@ -154,13 +154,13 @@ if ENV == 'production':
 	            # Update the closest object if it is the closest
 	            if ypercentage <= object_closest['ypercentage']:
 	                object_closest = {
-	                    'xpercentage': xpercentage,
-	                    'ypercentage': ypercentage,
+	                    'xpercentage': ypercentage,
+	                    'ypercentage': xpercentage,
 	                    'material': object_name,
 	                }
 
 	            if DEBUG:
-	                print('Locatie:' + str(xcenter) + '%, ' + str(ycenter) + '%')
+	                print('Locatie:' + str(object_closest['xpercentage']) + '%, ' + str(object_closest['ypercentage']) + '%')
 
 	            if SHOW_FRAME:
 	                # Draw bounding box
