@@ -55,7 +55,7 @@ def move(advised_movement):
     if ENV == 'production':
         SetLeftSpeed(int(left_speed))
         # time.sleep(rest)
-        time.sleep(0)
+        time.sleep(0.1)
         SetRightSpeed(int(right_speed))
     else:
         print('Left speed: ' + str(left_speed) + ' real / ' + str(speed * left_direction) + ' desired')
