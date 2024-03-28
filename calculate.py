@@ -11,8 +11,9 @@ def search_movement(object_closest):
         'grab': False,
     }
 
+	deviation = 0
+	
 	if DEBUG:
-		deviation = 0
 		print(object_closest)
 
 	if min_deviation <= object_closest['xpercentage'] <= max_deviation:
