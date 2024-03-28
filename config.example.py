@@ -14,17 +14,27 @@ ROBBERT_LOGO = """
 
 # Robbert
 STALL_PERCENTAGE = 40  # [%]
-MIN_DISTANCE = 15  # [cm]
-AVOID_COLLISSION_SPEED = 20  # [%]
-AVOID_COLLISSION_BACKWARD_DURATION = 2  # [s]
-AVOID_COLLISSION_TURN_DURATION = 3  # [s]
+MIN_DISTANCE = 30  # [cm]
+AVOID_COLLISSION_SPEED = 40  # [%]
+AVOID_COLLISSION_BACKWARD_DURATION = 0.5  # [s]
+AVOID_COLLISSION_TURN_DURATION = 0.5  # [s]
+TURN_DURATION = 0.1  # [s]
 DROPPED_TRASH_SPEED = 20  # [s]
 DROPPED_TRASH_DURATION = 1  # [s]
-NON_GRABBED_SERVO_ANGLE= 100  # [degrees]
-GRABBED_SERVO_ANGLE = 50  # [degrees]
-LEFT_DELAY = 0.1  # [s]
+NON_GRABBED_SERVO_ANGLE= 160  # [degrees]
+GRABBED_SERVO_ANGLE = 20  # [degrees]
+LEFT_DELAY = 0.0  # [s]
+MAX_REST = 0.4  # [s]
+LEFT_SPEED = 100  # [%]
+RIGHT_SPEED = 90  # [%]
+MINIMUM_WHITE = 2000  # geen idee
 
 TURN_LEFT = {
+    'direction': 'left',
+    'speed': AVOID_COLLISSION_SPEED,
+    'duration': TURN_DURATION,
+}
+TURN_LEFT_AVOID_COLLISSION = {
     'direction': 'left',
     'speed': AVOID_COLLISSION_SPEED,
     'duration': AVOID_COLLISSION_TURN_DURATION,
@@ -47,7 +57,7 @@ min_conf_threshold = 0.80  # [%]
 # Calculate
 DEVIATION = 10  # [%]
 DISERED_OBJECT_LOCATION = 10  # [%]
-CAUTION_LEVEL_X = 0.001  # CAUTION_LEVEL = duration[s] / deviation[%]
+CAUTION_LEVEL_X = 0.002  # CAUTION_LEVEL = duration[s] / deviation[%]
 CAUTION_LEVEL_Y = 0.005  # CAUTION_LEVEL = duration[s] / deviation[%]
 STANDARD_SPEED = 90  # [%]
 STANDARD_DURATION_SONAR_FORWARD = 0.1 # [s]
