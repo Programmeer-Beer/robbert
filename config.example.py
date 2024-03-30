@@ -2,7 +2,7 @@
 ###                   Enviroment                     ###
 ########################################################
 ENV = "production" # development or production
-DEBUG = True
+DEBUG = False
 SHOW_FRAME = False
 ROBBERT_LOGO = """
   _____            _       _                     _   
@@ -27,7 +27,7 @@ STANDARD_SPEED = 100  # [%]
 
 # Location constants
 DEVIATION = 20  # [%]
-CAMERA_DEVIATION_TO_RIGHT = 0  # [%]
+CAMERA_DEVIATION_TO_RIGHT = 1  # [%]
 DISERED_OBJECT_LOCATION = 12  # [%]
 DROP_DISTANCE = 40  # [cm]
 
