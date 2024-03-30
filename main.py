@@ -1,9 +1,10 @@
-from config import ROBBERT_LOGO, TURN_LEFT, BACKWARD
+from config import ROBBERT_LOGO, TURN_LEFT, FORWARD, BACKWARD, NUMBER_OF_FIRST_CIRCLES, NUMBER_OF_SECOND_CIRCLES, NUMBER_OF_FORWARDS
 import os
 import warnings
 import calculate
 import object_detection
 import robbert
+import time
 
 def welcome_message():
     if os.name == 'nt':  # nt betekent Windows
@@ -15,22 +16,41 @@ def welcome_message():
 
 def search_object():
     object_material = ''
+    i = 0
+    j = 0
+    k = 0
+    
     while True:
+        print(i, j, k)
         if robbert.collision_warning() == True:
             # If object detected: revert, turn left and the loop starts over
             robbert.avoid_collision()
         else:
             # Search closest object
+            time.sleep(0.1)
             object_closest = object_detection.find_closest()
             if object_closest['material'] == '':
+                # If he sees nothing for two circles: move forward, make a circle and move forward and repeat
+                if i > NUMBER_OF_FIRST_CIRCLES and j >= NUMBER_OF_SECOND_CIRCLES and k < NUMBER_OF_FORWARDS:
+                    robbert.move(FORWARD)
+                    if k == NUMBER_OF_FORWARDS:
+                        k = 0
+                        j = 0
+                    else:
+                        k += 1
                 # If no object is found, make a left turn and the loop starts over
                 print('Geen afval gevonden, ik zoek door.')
                 robbert.move(TURN_LEFT)
+                i += 1
+                j += 1
             else:
+                i = 0
+                j = 0
                 # If object is found, calculate the movement necessary to reach the object
                 advised_movement = calculate.search_movement(object_closest)
                 if advised_movement['grab']:
                     # If advised by the calculator, grab the object. This ends the while loop
+                    robbert.move(FORWARD)
                     object_material = object_closest['material']
                     break
                 print(advised_movement)
@@ -71,7 +91,7 @@ def clean_trash():
         object_material = search_object()
         drive_to_drop(object_material)
         robbert.move(BACKWARD)
-        sleep(10)
+        time.sleep(10)
 
 def main():
     welcome_message()

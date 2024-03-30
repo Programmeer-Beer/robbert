@@ -8,13 +8,13 @@ if ENV == 'production':
     from mirte_msgs.srv import *
     from sensor_msgs.msg import *
     from std_srvs.srv import *
+    from mirte_robot import robot
+    mirte = robot.createRobot()
 
     SetRightSpeed = rp.ServiceProxy('/mirte/set_right_speed', SetMotorSpeed)
     SetLeftSpeed = rp.ServiceProxy('/mirte/set_left_speed', SetMotorSpeed)
     GetDistanceLeft = rp.ServiceProxy('/mirte/get_distance_left',GetDistance)
     GetPinValue = rp.ServiceProxy('/mirte/get_pin_value', GetPinValue)
-    GetIntensityRight = rp.ServiceProxy('/mirte/get_intensity_right', GetIntensityDigital)
-    GetIntensityLeft = rp.ServiceProxy('/mirte/get_intensity_left', GetIntensityDigital)
     SetLeftServo = rp.ServiceProxy('/mirte/set_left_servo_angle',SetServoAngle)
 
     # Reset grabber angle to starting posistion
@@ -39,7 +39,7 @@ def move(advised_movement):
         left_direction, right_direction = 1, -1
 
    	# Set motor speed
-    absolute_speed = STALL_PERCENTAGE + speed * active_percentage
+    # absolute_speed = STALL_PERCENTAGE + speed * active_percentage
 
     # Combine motor speed with direction  
     # left_speed = absolute_speed * left_direction * LEFT_MOTOR_DEVIATION
@@ -47,9 +47,9 @@ def move(advised_movement):
     left_speed = LEFT_SPEED * left_direction
     right_speed = RIGHT_SPEED * right_direction
 
-    rest = LEFT_DELAY * duration
-    if rest > MAX_REST:
-        rest = MAX_REST
+    # rest = LEFT_DELAY * duration
+    # if rest > MAX_REST:
+    #     rest = MAX_REST
     
     # Push to motor
     if ENV == 'production':
@@ -67,8 +67,9 @@ def move(advised_movement):
 
     # Turn motors off
     if ENV == 'production':
-        SetLeftSpeed(0)
         SetRightSpeed(0)
+        time.sleep(0.05)
+        SetLeftSpeed(0)
     else:
         print('Motors turned off')
 
@@ -128,9 +129,16 @@ def check_color(): # color['left'], color['right']
     }
 
     if ENV == 'production':
-        if GetIntensityRight() > MINIMUM_WHITE:
-            color['right'] = 'white'
-        if GetIntensityLeft() > MINIMUM_WHITE:
+        if DEBUG:
+            print(mirte.getIntensity('left'))
+            print(mirte.getIntensity('right'))
+        intensity_left_raw = mirte.getIntensity('left')
+        intensity_right_raw = mirte.getIntensity('right')
+        intensity_left = int(intensity_left_raw)
+        intensity_right = int(intensity_right_raw)
+        if intensity_left > MINIMUM_WHITE:
             color['left'] = 'white'
+        if intensity_right > MINIMUM_WHITE:
+            color['right'] = 'white'
     
     return color

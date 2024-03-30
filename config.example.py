@@ -15,6 +15,30 @@ ROBBERT_LOGO = """
                                                      
 """
 
+NUMBER_OF_FIRST_CIRCLES = 30
+NUMBER_OF_SECOND_CIRCLES = 20
+NUMBER_OF_FORWARDS = 10
+
+########################################################
+###                   Calculate                      ###
+########################################################
+# Driving constants
+STANDARD_SPEED = 100  # [%]
+
+# Location constants
+DEVIATION = 20  # [%]
+CAMERA_DEVIATION_TO_RIGHT = 0  # [%]
+DISERED_OBJECT_LOCATION = 12  # [%]
+DROP_DISTANCE = 40  # [cm]
+
+# Duration constants / The lower, the shorter
+CAUTION_LEVEL_X = 0.001  # CAUTION_LEVEL = duration[s] / deviation[%]
+CAUTION_LEVEL_Y = 0.005  # CAUTION_LEVEL = duration[s] / deviation[%]
+
+# Driving constants
+STANDARD_DURATION_SONAR_FORWARD = 0.5 # [s]
+STANDARD_DURATION_SONAR_TURNING = 0.1 # [s]
+
 
 
 ########################################################
@@ -29,7 +53,6 @@ LEFT_SPEED = 100  # [%]
 RIGHT_SPEED = 90  # [%]
 LEFT_MOTOR_DEVIATION = 1 # Multiplycation factor
 RIGHT_MOTOR_DEVIATION = 1 # Multiplycation factor
-
 
 # Grabber constants
 NON_GRABBED_SERVO_ANGLE= 160  # [degrees]
@@ -50,17 +73,22 @@ TURN_LEFT_AVOID_COLLISSION = {
 }
 
 # General driving standarts
+NORMAL_DURATION = 0.3  # [s]
+FORWARD = {
+    'direction': 'forward',
+    'speed': STANDARD_SPEED,
+    'duration': NORMAL_DURATION,
+}
 TURN_DURATION = 0.05  # [s]
-DROPPED_TRASH_SPEED = 20  # [s]
-DROPPED_TRASH_DURATION = 1  # [s]
 TURN_LEFT = {
     'direction': 'left',
-    'speed': AVOID_COLLISSION_SPEED,
+    'speed': STANDARD_SPEED,
     'duration': TURN_DURATION,
 }
+DROPPED_TRASH_DURATION = 1  # [s]
 BACKWARD = {
     'direction': 'backward',
-    'speed': DROPPED_TRASH_SPEED,
+    'speed': STANDARD_SPEED,
     'duration': DROPPED_TRASH_DURATION,
 }
 
@@ -71,29 +99,8 @@ BACKWARD = {
 ########################################################
 # Model specifications
 MODEL_NAME = "aluminium_papier_model_v2"
-min_conf_threshold = 0.80  # [%]
+min_conf_threshold = 0.95  # [%]
 
 # Camera specifications
 resW = 640  # [px]
 resH = 480  # [px]
-
-
-
-########################################################
-###                   Calculate                      ###
-########################################################
-# Driving constants
-STANDARD_SPEED = 90  # [%]
-
-# Location constants
-DEVIATION = 10  # [%]
-DISERED_OBJECT_LOCATION = 10  # [%]
-DROP_DISTANCE = 25  # [cm]
-
-# Duration constants / The lower, the shorter
-CAUTION_LEVEL_X = 0.002  # CAUTION_LEVEL = duration[s] / deviation[%]
-CAUTION_LEVEL_Y = 0.005  # CAUTION_LEVEL = duration[s] / deviation[%]
-
-# Driving constants
-STANDARD_DURATION_SONAR_FORWARD = 0.1 # [s]
-STANDARD_DURATION_SONAR_TURNING = 0.1 # [s]
