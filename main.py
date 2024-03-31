@@ -94,7 +94,7 @@ def clean_trash():
 
 def main():
     welcome_message()
-    time.sleep(15)  # Gives time to put Robbert down
+    time.sleep(0)  # Gives time to put Robbert down
     clean_trash()
 
 if __name__ == "__main__":
