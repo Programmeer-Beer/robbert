@@ -69,16 +69,16 @@ def drive_to_drop(object_material):
 
     print('Ik breng het ' + object_material + ' propje naar ' + desired_color + '.')
     while True:
+        color = robbert.check_color()  # color['left'], color['right']
+        distance = robbert.sonar_distance()  # [m]
+        advised_movement = calculate.drop_movement(color, desired_color, distance)
+        if advised_movement['drop']:
+            # If advised by the calculator, drop the object. This ends the while loop
+            break
         if robbert.collision_warning() == True:
             # If object detected: revert, turn left and the loop starts over
             robbert.avoid_collision()
         else:
-            color = robbert.check_color()  # color['left'], color['right']
-            distance = robbert.sonar_distance()  # [m]
-            advised_movement = calculate.drop_movement(color, desired_color, distance)
-            if advised_movement['drop']:
-                # If advised by the calculator, drop the object. This ends the while loop
-                break
             robbert.move(advised_movement)
 
     # Drop the object
