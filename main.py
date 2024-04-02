@@ -38,8 +38,9 @@ def search_object():
                         j = 0
                     else:
                         k += 1
-                # If no object is found, make a left turn and the loop starts over
-                robbert.move(TURN_LEFT)
+                else:
+                    # If no object is found, make a left turn and the loop starts over
+                    robbert.move(TURN_LEFT)
                 i += 1
                 j += 1
             else:
@@ -78,6 +79,7 @@ def drive_to_drop(object_material):
         if robbert.collision_warning() == True:
             # If object detected: revert, turn left and the loop starts over
             robbert.avoid_collision()
+            #robbert.move(TURN_LEFT)
         else:
             robbert.move(advised_movement)
 
