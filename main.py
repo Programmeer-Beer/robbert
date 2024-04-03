@@ -11,7 +11,7 @@ def welcome_message():
         os.system('cls')  # Clear commando voor Windows
     else:
         os.system('clear')  # Clear commando voor Unix/Linux/macOS
-    
+
     print(ROBBERT_LOGO)
 
 def search_object():
@@ -20,7 +20,7 @@ def search_object():
     i = 0
     j = 0
     k = 0
-    
+
     while True:
         if robbert.collision_warning() == True:
             # If object detected: revert, turn left and the loop starts over
@@ -38,8 +38,9 @@ def search_object():
                         j = 0
                     else:
                         k += 1
-                # If no object is found, make a left turn and the loop starts over
-                robbert.move(TURN_LEFT)
+                else:
+                    # If no object is found, make a left turn and the loop starts over
+                    robbert.move(TURN_LEFT)
                 i += 1
                 j += 1
             else:
@@ -69,16 +70,17 @@ def drive_to_drop(object_material):
 
     print('Ik breng het ' + object_material + ' propje naar ' + desired_color + '.')
     while True:
+        color = robbert.check_color()  # color['left'], color['right']
+        distance = robbert.sonar_distance()  # [m]
+        advised_movement = calculate.drop_movement(color, desired_color, distance)
+        if advised_movement['drop']:
+            # If advised by the calculator, drop the object. This ends the while loop
+            break
         if robbert.collision_warning() == True:
             # If object detected: revert, turn left and the loop starts over
             robbert.avoid_collision()
+            #robbert.move(TURN_LEFT)
         else:
-            color = robbert.check_color()  # color['left'], color['right']
-            distance = robbert.sonar_distance()  # [m]
-            advised_movement = calculate.drop_movement(color, desired_color, distance)
-            if advised_movement['drop']:
-                # If advised by the calculator, drop the object. This ends the while loop
-                break
             robbert.move(advised_movement)
 
     # Drop the object
