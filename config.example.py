@@ -2,17 +2,17 @@
 ###                   Enviroment                     ###
 ########################################################
 ENV = "production" # development or production
-DEBUG = False
+DEBUG = True
 SHOW_FRAME = False
 ROBBERT_LOGO = """
-  _____            _       _                     _   
- |  __ \          | |     | |                   | |  
- | |__) |   ___   | |__   | |__     ___   _ __  | |_ 
+  _____            _       _                     _
+ |  __ \          | |     | |                   | |
+ | |__) |   ___   | |__   | |__     ___   _ __  | |_
  |  _  /   / _ \  | '_ \  | '_ \   / _ \ | '__| | __|
- | | \ \  | (_) | | |_) | | |_) | |  __/ | |    | |_ 
+ | | \ \  | (_) | | |_) | | |_) | |  __/ | |    | |_
  |_|  \_\  \___/  |_.__/  |_.__/   \___| |_|     \__|
-                                                     
-                                                     
+
+
 """
 
 NUMBER_OF_FIRST_CIRCLES = 30
@@ -23,16 +23,16 @@ NUMBER_OF_FORWARDS = 10
 ###                   Calculate                      ###
 ########################################################
 # Driving constants
-STANDARD_SPEED = 100  # [%]
+STANDARD_SPEED = 70  # [%]
 
 # Location constants
 DEVIATION = 20  # [%]
-CAMERA_DEVIATION_TO_RIGHT = 1  # [%]
+CAMERA_DEVIATION_TO_RIGHT = 5  # [%]
 DISERED_OBJECT_LOCATION = 12  # [%]
 DROP_DISTANCE = 40  # [cm]
 
 # Duration constants / The lower, the shorter
-CAUTION_LEVEL_X = 0.001  # CAUTION_LEVEL = duration[s] / deviation[%]
+CAUTION_LEVEL_X = 0.0005  # CAUTION_LEVEL = duration[s] / deviation[%]
 CAUTION_LEVEL_Y = 0.005  # CAUTION_LEVEL = duration[s] / deviation[%]
 
 # Driving constants
@@ -50,7 +50,8 @@ LEFT_DELAY = 0.0  # [s]
 RIGHT_DELAY = 0.0  # [s]
 MAX_REST = 0.4  # [s]
 LEFT_SPEED = 100  # [%]
-RIGHT_SPEED = 90  # [%]
+#RIGHT_SPEED = 90  # [%]
+RIGHT_SPEED = 100
 LEFT_MOTOR_DEVIATION = 1 # Multiplycation factor
 RIGHT_MOTOR_DEVIATION = 1 # Multiplycation factor
 
@@ -79,7 +80,7 @@ FORWARD = {
     'speed': STANDARD_SPEED,
     'duration': NORMAL_DURATION,
 }
-TURN_DURATION = 0.05  # [s]
+TURN_DURATION = 0.1  # [s]
 TURN_LEFT = {
     'direction': 'left',
     'speed': STANDARD_SPEED,
